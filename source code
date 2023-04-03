@@ -1,0 +1,52 @@
+// SAT App - Administers Timed SAT Questions and Scores Automatically
+
+// Load the SAT questions and answers from a JSON file
+let satQuestions = require('./sat-questions.json');
+
+// Initialize the score counter to zero
+let score = 0;
+
+// Set the time limit for the test in minutes
+const timeLimit = 60;
+
+// Shuffle the order of the questions
+shuffleArray(satQuestions);
+
+// Loop through each question and present it to the user
+for (let i = 0; i < satQuestions.length; i++) {
+  let question = satQuestions[i];
+
+  // Display the question and answer choices
+  console.log(`Question ${i+1}: ${question.question}`);
+  console.log(`A. ${question.choices[0]}`);
+  console.log(`B. ${question.choices[1]}`);
+  console.log(`C. ${question.choices[2]}`);
+  console.log(`D. ${question.choices[3]}`);
+
+  // Get the user's answer choice within the time limit
+  let userAnswer = "";
+  let startTime = Date.now();
+  while (userAnswer === "" && (Date.now() - startTime) < (timeLimit * 1000)) {
+    userAnswer = prompt(`Enter your answer (A, B, C, or D) - ${timeLimit - Math.floor((Date.now() - startTime) / 1000)} seconds left: `);
+  }
+
+  // Check if the user's answer is correct and update the score
+  if (userAnswer.toUpperCase() === question.answer.toUpperCase()) {
+    score++;
+    console.log("Correct!");
+  } else {
+    console.log("Incorrect.");
+  }
+}
+
+// Display the final score to the user
+console.log(`Your SAT score is ${score}/${satQuestions.length}`);
+
+// Function to shuffle an array randomly
+function shuffleArray(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+  return array;
+}
